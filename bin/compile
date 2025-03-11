@@ -55,6 +55,9 @@ else
   tar xzf $CACHE_FILE -C $VENDOR_DIR
 fi
 
+export PKG_CONFIG_PATH="/app/vendor/imagemagick/lib/pkgconfig:$INSTALL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH"
+echo "-----> PKG_CONFIG_PATH=$PKG_CONFIG_PATH"
+
 echo "-----> Writing policy file"
 mkdir -p $INSTALL_DIR/etc/ImageMagick
 cat > $INSTALL_DIR/policy.xml <<EOF
