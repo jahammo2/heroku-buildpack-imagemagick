@@ -33,7 +33,6 @@ if [ ! -f $CACHE_FILE ]; then
   fi
   tar xvf $BUILD_DIR/$IMAGE_MAGICK_FILE | indent
 
-  # /usr/lib/x86_64-linux-gnu/pkgconfig
   echo "-----> Building ImageMagick"
   cd $IMAGE_MAGICK_DIR
   export CPPFLAGS="-I$INSTALL_DIR/include"
@@ -56,32 +55,10 @@ else
   tar xzf $CACHE_FILE -C $VENDOR_DIR
 fi
 
-export PKG_CONFIG_PATH="/app/vendor/imagemagick/lib/pkgconfig:$INSTALL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH"
-echo "-----> PKG_CONFIG_PATH=$PKG_CONFIG_PATH"
-
-export PKG_CONFIG_PATH=$(echo "$PKG_CONFIG_PATH" | awk -v RS=':' '!seen[$0]++ && $0 {printf "%s%s", sep, $0; sep=":"}')
-
-cat <<EOF > export
-export PKG_CONFIG_PATH="\$PKG_CONFIG_PATH:$PKG_CONFIG_PATH"
-EOF
-
-echo "-----> PKG_CONFIG_PATH2=$PKG_CONFIG_PATH"
-
 echo "-----> Writing policy file"
 mkdir -p $INSTALL_DIR/etc/ImageMagick
 cat > $INSTALL_DIR/policy.xml <<EOF
 <policymap>
-  <policy domain="resource" name="memory" value="4GiB"/>
-  <policy domain="resource" name="map" value="4GiB"/>
-  <policy domain="resource" name="width" value="16KP"/>
-  <policy domain="resource" name="height" value="16KP"/>
-  <policy domain="resource" name="area" value="128MP"/>
-  <policy domain="resource" name="disk" value="8GiB"/>
-  <policy domain="delegate" rights="none" pattern="URL" />
-  <policy domain="delegate" rights="none" pattern="HTTPS" />
-  <policy domain="delegate" rights="none" pattern="HTTP" />
-  <policy domain="path" rights="none" pattern="@*"/>
-  <policy domain="cache" name="shared-secret" value="passphrase" stealth="true"/>
   <policy domain="coder" rights="none" pattern="EPHEMERAL" />
   <policy domain="coder" rights="none" pattern="HTTPS" />
   <policy domain="coder" rights="none" pattern="MVG" />
@@ -96,9 +73,7 @@ RUNTIME_INSTALL_PATH="\$HOME/vendor/imagemagick"
 mkdir -p $(dirname $PROFILE_PATH)
 echo "export PATH=$RUNTIME_INSTALL_PATH/bin:\$PATH" >> $PROFILE_PATH
 echo "export LD_LIBRARY_PATH=$RUNTIME_INSTALL_PATH/lib:\$LD_LIBRARY_PATH" >> $PROFILE_PATH
-# echo "export MAGICK_CONFIGURE_PATH=$RUNTIME_INSTALL_PATH" >> $PROFILE_PATH
-echo "-----> MAGICK_CONFIGURE_PATH=$RUNTIME_INSTALL_PATH"
-echo "-----> PROFILE_PATH=$PROFILE_PATH"
+echo "export MAGICK_CONFIGURE_PATH=$RUNTIME_INSTALL_PATH" >> $PROFILE_PATH
 
 # DOWNLOAD_URL="http://www.imagemagick.org/download/ImageMagick-6.9.2-0.tar.gz"
 
