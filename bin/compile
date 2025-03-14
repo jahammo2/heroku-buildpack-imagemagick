@@ -12,7 +12,7 @@ VENDOR_DIR="$BUILD_DIR/vendor"
 mkdir -p $VENDOR_DIR
 INSTALL_DIR="$VENDOR_DIR/imagemagick"
 mkdir -p $INSTALL_DIR
-IMAGE_MAGICK_VERSION="7.1.1-44"
+IMAGE_MAGICK_VERSION="7.1.1-45"
 CACHE_FILE="$CACHE_DIR/imagemagick-$IMAGE_MAGICK_VERSION.tar.gz"
 
 if [ ! -f $CACHE_FILE ]; then
@@ -33,6 +33,7 @@ if [ ! -f $CACHE_FILE ]; then
   fi
   tar xvf $BUILD_DIR/$IMAGE_MAGICK_FILE | indent
 
+  # /usr/lib/x86_64-linux-gnu/pkgconfig
   echo "-----> Building ImageMagick"
   cd $IMAGE_MAGICK_DIR
   export CPPFLAGS="-I$INSTALL_DIR/include"
