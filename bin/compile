@@ -20,16 +20,22 @@ LIBHEIF_VERSION="1.19.7"
 HEIF_CACHE_FILE="$CACHE_DIR/libheif-$LIBHEIF_VERSION.tar.gz"
 
 # if [ ! -f $HEIF_CACHE_FILE ]; then
-  # Install libheif
-  # echo "-----> Downloading libheif from $LIBHEIF_URL"
-  # wget $LIBHEIF_URL -P $BUILD_DIR
-  # tar xzf $BUILD_DIR/libheif-$LIBHEIF_VERSION.tar.gz -C $BUILD_DIR
-  # cd $BUILD_DIR/libheif-$LIBHEIF_VERSION
-  # ./configure --prefix=$INSTALL_DIR
-  # make && make install
-  # cd ..
-  # rm -rf $BUILD_DIR/libheif-$LIBHEIF_VERSION
+  Install libheif
+  echo "-----> Downloading libheif from $LIBHEIF_URL"
+  wget $LIBHEIF_URL -P $BUILD_DIR
+  tar xzf $BUILD_DIR/libheif-$LIBHEIF_VERSION.tar.gz -C $BUILD_DIR
+  cd $BUILD_DIR/libheif-$LIBHEIF_VERSION
+  ./configure --prefix=$INSTALL_DIR
+  make && make install
+  cd ..
+  rm -rf $BUILD_DIR/libheif-$LIBHEIF_VERSION
 # fi
+
+export PKG_CONFIG_PATH="$INSTALL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH"
+export CFLAGS="-I$INSTALL_DIR/include $CFLAGS"
+export LDFLAGS="-L$INSTALL_DIR/lib $LDFLAGS"
+export CPPFLAGS="-I$INSTALL_DIR/include"
+export LD_LIBRARY_PATH="$INSTALL_DIR/lib:$LD_LIBRARY_PATH"
 
 # if [ ! -f $CACHE_FILE ]; then
   # install imagemagick
@@ -53,7 +59,7 @@ HEIF_CACHE_FILE="$CACHE_DIR/libheif-$LIBHEIF_VERSION.tar.gz"
   cd $IMAGE_MAGICK_DIR
   export CPPFLAGS="-I$INSTALL_DIR/include"
   export LDFLAGS="-L$INSTALL_DIR/lib"
-  ./configure --prefix=$INSTALL_DIR --without-gvc --with-heic
+  ./configure --prefix=$INSTALL_DIR --without-gvc --with-heic=yes
   make && make install
   cd ..
   rm -rf $IMAGE_MAGICK_DIR
